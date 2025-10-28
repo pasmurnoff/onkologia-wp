@@ -1,0 +1,88 @@
+<?php $__env->startSection('content'); ?>
+    <section class="events container_rg">
+        <?php
+            // Заголовок страницы записей
+            $posts_page_id = get_option('page_for_posts');
+            $page_title = $posts_page_id ? get_the_title($posts_page_id) : 'События';
+
+            // Подготовка пагинации
+            $paged = get_query_var('paged') ? (int) get_query_var('paged') : 1;
+
+            // Получаем только записи из рубрики "sobytiya"
+            $events_query = new WP_Query([
+                'post_type' => 'post',
+                'category_name' => 'sobytiya', // ← ключ рубрики (slug)
+                'posts_per_page' => 9,
+                'paged' => $paged,
+                'ignore_sticky_posts' => true,
+            ]);
+        ?>
+
+        <h1 class="page-title"><?php echo e($page_title); ?></h1>
+
+        <?php if ($__env->exists('components.follow-us-events.wrap')) echo $__env->make('components.follow-us-events.wrap', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+
+        <?php if($events_query->have_posts()): ?>
+            <div class="events-cards">
+                <?php while($events_query->have_posts()): ?>
+                    <?php $events_query->the_post(); ?>
+
+                    <?php
+                        $thumb = has_post_thumbnail()
+                            ? get_the_post_thumbnail(null, 'medium_large', ['class' => 'events-cards__image'])
+                            : '<img class="events-cards__image" src="' .
+                                esc_url(get_theme_file_uri('resources/assets/images/placeholder.png')) .
+                                '" alt="' .
+                                esc_attr(get_the_title()) .
+                                '">';
+                        $date_human = get_the_date('j F Y');
+                        $ago = human_time_diff(get_the_time('U'), current_time('timestamp')) . ' назад';
+                    ?>
+
+                    <article <?php post_class('events-cards__element') ?>>
+                        <a href="<?php echo e(get_permalink()); ?>" aria-label="<?php echo e(esc_attr(get_the_title())); ?>">
+                            <?php echo $thumb; ?>
+
+                        </a>
+
+                        <div class="events-cards__content">
+                            <div class="events-cards__title">
+                                <a href="<?php echo e(get_permalink()); ?>"><?php echo e(get_the_title()); ?></a>
+                            </div>
+
+                            <?php
+                                $excerpt = get_the_excerpt();
+                                if (!$excerpt) {
+                                    $excerpt = wp_strip_all_tags(get_the_content());
+                                } else {
+                                    $excerpt = wp_strip_all_tags($excerpt);
+                                }
+
+                                $limit = 120; // сколько символов оставить
+                                if (mb_strlen($excerpt, 'UTF-8') > $limit) {
+                                    $excerpt = mb_substr($excerpt, 0, $limit, 'UTF-8') . '…';
+                                }
+                            ?>
+
+                            <div class="events-cards__text">
+                                <p><?php echo $excerpt; ?></p>
+                            </div>
+
+                            <div class="events-cards__bottom">
+                                <div class="events-card__date"><?php echo e($date_human); ?></div>
+                                <div class="events-cards__time"><?php echo e($ago); ?></div>
+                            </div>
+                        </div>
+                    </article>
+                <?php endwhile; ?>
+            </div>
+
+
+            <?php wp_reset_postdata(); ?>
+        <?php else: ?>
+            <p>Пока нет событий.</p>
+        <?php endif; ?>
+    </section>
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.app', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
