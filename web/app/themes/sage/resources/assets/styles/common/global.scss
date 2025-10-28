@@ -3,15 +3,102 @@
   margin: 0;
 }
 
+button,
+input,
+textarea,
+select {
+  outline: none; // убирает стандартный outline
+}
+
+button:focus,
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  background: var(--pill-color);
+}
+
 .container {
-  width: 100%;
-  max-width: 1200px;
+  padding: 0 36px;
   margin-left: auto;
   margin-right: auto;
   position: relative;
+  max-width: 1920px;
 
-  @media screen and (max-width: 1230px) {
-    padding-left: 15px;
-    padding-right: 15px;
+  @media screen and (max-width: 768px) {
+    padding: 0 16px;
   }
+
+  &_rg {
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    max-width: 1040px;
+
+    @media screen and (max-width: 1024px) {
+      padding: 0 24px;
+    }
+
+    @media screen and (max-width: 520px) {
+      padding: 0 16px;
+    }
+  }
+}
+
+.btn {
+  &_primary {
+    padding: 12px 24px;
+    background: var(--pill-bg);
+    color: var(--pill-color);
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 20px;
+    display: flex;
+    gap: 8px;
+
+    &:hover {
+      opacity: 92% !important;
+      background: var(--pill-color-default) !important;
+    }
+  }
+
+  &_secondary {
+    background: var(--light-grey);
+    color: var(--black);
+    padding: 12px 24px;
+    font-size: 15px;
+    border-radius: 12px;
+    font-weight: 500;
+    line-height: 20px;
+
+    &:hover {
+      background: rgba(167, 167, 201, 0.25);
+    }
+  }
+}
+
+a {
+  text-decoration: none; /* убирает подчёркивание */
+  color: inherit; /* берёт цвет текста родителя */
+}
+
+.logo {
+  display: none;
+}
+
+:root[data-theme="light"] .logo--light {
+  display: block;
+}
+
+:root[data-theme="dark"] .logo--dark {
+  display: block;
 }

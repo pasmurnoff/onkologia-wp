@@ -1,0 +1,56 @@
+.cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+
+  @media screen and (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+
+  &__item {
+    background: var(--card);
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    gap: 14px;
+    box-shadow: 0 4px 28px 0 rgba(0, 0, 0, 0.08);
+    padding: 8px;
+    transition: 0.3s ease;
+    cursor: pointer;
+  }
+
+  // когда ховерим на любую карточку
+  &:has(.cards__item:hover) {
+    .cards__item {
+      box-shadow: none; // убираем тень у всех
+      background: transparent;
+    }
+
+    .cards__item:hover {
+      box-shadow: 0 4px 28px 0 rgba(0, 0, 0, 0.08); // оставляем у текущей
+      transition: box-shadow 0.3s ease;
+      background: var(--card);
+    }
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+  }
+
+  &__title {
+    font-size: 17px;
+    line-height: 24px;
+    font-weight: 500;
+    color: var(--black);
+  }
+
+  &__text {
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 20px;
+    color: var(--silver-grey);
+  }
+}

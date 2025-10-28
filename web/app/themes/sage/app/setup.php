@@ -78,17 +78,17 @@ add_action('after_setup_theme', function () {
 add_action('widgets_init', function () {
     $config = [
         'before_widget' => '<section class="widget %1$s %2$s">',
-        'after_widget'  => '</section>',
-        'before_title'  => '<h3>',
-        'after_title'   => '</h3>'
+        'after_widget' => '</section>',
+        'before_title' => '<h3>',
+        'after_title' => '</h3>'
     ];
     register_sidebar([
-        'name'          => __('Primary', 'sage'),
-        'id'            => 'sidebar-primary'
+        'name' => __('Primary', 'sage'),
+        'id' => 'sidebar-primary'
     ] + $config);
     register_sidebar([
-        'name'          => __('Footer', 'sage'),
-        'id'            => 'sidebar-footer'
+        'name' => __('Footer', 'sage'),
+        'id' => 'sidebar-footer'
     ] + $config);
 });
 
@@ -129,4 +129,35 @@ add_action('after_setup_theme', function () {
     sage('blade')->compiler()->directive('asset', function ($asset) {
         return "<?= " . __NAMESPACE__ . "\\asset_path({$asset}); ?>";
     });
+});
+
+add_action('after_setup_theme', function () {
+    register_nav_menus([
+        'primary' => __('Primary Navigation', 'sage'),
+    ]);
+}, 20);
+
+// <li class="menu__item ...">
+add_filter('nav_menu_css_class', function ($classes, $item, $args, $depth) {
+    if (!empty($args->theme_location) && $args->theme_location === 'primary') {
+        $classes[] = 'menu__item';
+    }
+    return $classes;
+}, 10, 4);
+
+// <a class="menu__link">
+add_filter('nav_menu_link_attributes', function ($atts, $item, $args, $depth) {
+    if (!empty($args->theme_location) && $args->theme_location === 'primary') {
+        $atts['class'] = trim(($atts['class'] ?? '') . ' menu__link');
+    }
+    return $atts;
+}, 10, 4);
+
+add_action('after_setup_theme', function () {
+    add_image_size('feedback-avatar', 80, 80, true);
+});
+
+add_action('after_setup_theme', function () {
+    add_image_size('team-photo', 640, 640, true);   // фото в карточке
+    add_image_size('team-avatar', 72, 72, true);    // мини-аватар в «quote-card»
 });

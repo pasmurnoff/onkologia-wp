@@ -1,0 +1,96 @@
+.table {
+  &__item {
+    padding: 16px 0;
+    border-top: 1px solid var(--light-grey);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+
+    &:first-of-type {
+      display: none;
+    }
+
+    &:last-of-type {
+      border-bottom: 1px solid var(--light-grey);
+    }
+
+    @media screen and (max-width: 768px) {
+      flex-flow: row-reverse;
+      align-items: flex-start;
+    }
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    @media screen and (max-width: 768px) {
+      width: 100%;
+    }
+  }
+
+  &__users {
+    @media screen and (max-width: 768px) {
+      width: 36px;
+      height: 36px;
+    }
+  }
+
+  &__title {
+    font-size: 17px;
+    line-height: 24px;
+    font-weight: 500;
+    color: var(--black);
+
+    @media screen and (max-width: 768px) {
+      font-size: 15px;
+      line-height: 20px;
+      font-weight: 500;
+    }
+  }
+
+  &__text {
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 20px;
+    color: var(--silver-grey);
+  }
+}
+
+.user-avatars {
+  display: flex;
+
+  img {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: -5px;
+
+    @media screen and (max-width: 768px) {
+      display: none;
+
+      &:last-child {
+        width: 36px;
+        height: 36px;
+        display: block;
+      }
+    }
+  }
+}
+
+.tag-pill {
+  display: inline-block; /* или block */
+}
+
+.tag-pill:not(:last-child)::after {
+  content: "·";
+  margin-left: 4px;
+  margin-right: 4px;
+}
+
+.tag-pill::first-letter {
+  text-transform: uppercase;
+}

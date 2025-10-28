@@ -1,0 +1,51 @@
+.section {
+  max-width: 752px;
+  margin: auto;
+  padding-top: 100px;
+
+  @media screen and (max-width: 768px) {
+    padding-top: 60px;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+
+    h2 {
+      font-size: 20px;
+      line-height: 28px;
+      font-weight: 500;
+      color: var(--black);
+      margin: 0;
+    }
+  }
+
+  &__link {
+    font-size: 15px;
+    line-height: 20px;
+    color: var(--silver-grey);
+    text-decoration: none;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+
+    span {
+      @media screen and (max-width: 768px) {
+        display: none;
+      }
+    }
+
+    &:hover {
+      color: var(--black);
+
+      svg {
+        path {
+          stroke: var(--black) !important;
+        }
+      }
+    }
+  }
+}

@@ -136,3 +136,34 @@ function display_sidebar()
     isset($display) || $display = apply_filters('sage/display_sidebar', false);
     return $display;
 }
+
+
+namespace App;
+
+/**
+ * Удаляем из контента любые вложенные модалки и оставляем только безопасные теги.
+ */
+function clean_feedback_content($html)
+{
+    // 1) выкинуть любые блоки с class="modal"
+    $html = preg_replace('~<div[^>]*class="[^"]*\bmodal\b[^"]*"[^>]*>.*?</div>~si', '', $html);
+
+    // 2) выкинуть любые элементы с id, начинающимся на modal-
+    $html = preg_replace('~<([a-z0-9]+)([^>]*)\sid\s*=\s*"modal-[^"]*"[^>]*>.*?</\1>~si', '', $html);
+
+    // 3) пропустить через wp_kses, чтобы оставить только «текстовые» теги
+    $allowed = [
+        'p' => ['class' => true],
+        'br' => [],
+        'strong' => [],
+        'b' => [],
+        'em' => [],
+        'i' => [],
+        'ul' => [],
+        'ol' => [],
+        'li' => [],
+        'a' => ['href' => true, 'title' => true, 'target' => true, 'rel' => true],
+        'blockquote' => [],
+    ];
+    return wp_kses($html, $allowed);
+}

@@ -1,0 +1,64 @@
+// 1. Карты цветов для тем
+$theme-light: (
+  black: #111,
+  white: #ffff,
+  red: #c9212b,
+  silver-grey: #818c99,
+  light-grey: rgba(167, 167, 201, 0.15),
+  light-grey2: rgba(167, 167, 201, 0.25),
+  light-grey100: rgba(242, 242, 247, 1),
+  card: rgba(255, 255, 255, 1),
+  about-page-bg: #f2f2f7,
+  partners-bg: #f9f9f9,
+  partner-black: #2a2927,
+  header-color: #fff,
+  visited-title-color: #111,
+  combo-bg: #fff,
+  combo-color: #111,
+  pill-bg: #111,
+  pill-color: #fff,
+  pill-bg-default: #a7a7c926,
+  pill-color-default: #111,
+  custom-input-field: rgba(17, 17, 17, 0.02),
+  custom-search-color: rgba(167, 167, 201, 0.15),
+);
+
+$theme-dark: (
+  black: #fff,
+  white: #111,
+  red: #c9212b,
+  silver-grey: #797979,
+  light-grey: rgba(255, 255, 255, 0.06),
+  light-grey2: rgba(255, 255, 255, 0.16),
+  light-grey100: rgba(31, 31, 31, 1),
+  card: rgba(28, 28, 28, 1),
+  about-page-bg: #111,
+  partners-bg: #292929,
+  partner-black: #fff,
+  header-color: #1c1c1c,
+  visited-title-color: #fff,
+  combo-bg: #ffffff0f,
+  combo-color: #fff,
+  pill-bg: #fff,
+  pill-color: #111,
+  pill-bg-default: #ffffff0f,
+  pill-color-default: #fff,
+  custom-input-field: rgba(255, 255, 255, 0.03),
+  custom-search-color: rgba(255, 255, 255, 0.06),
+);
+
+// 2. Хелпер для вывода переменных
+@mixin theme-vars($map) {
+  @each $key, $val in $map {
+    --#{$key}: #{$val};
+  }
+}
+
+// 3. Базовая (светлая) и тёмная темы
+:root {
+  @include theme-vars($theme-light);
+}
+
+:root[data-theme="dark"] {
+  @include theme-vars($theme-dark);
+}
