@@ -66,6 +66,11 @@
     </div>
 </div>
 
+@php
+    $page_id = isset($page_id) ? $page_id : get_the_ID();
+    $qr_id = get_field('donate_qr', $page_id);
+    $qr_caption = get_field('donate_qr_caption', $page_id);
+@endphp
 
 <div class="modal" id="modal-donate" role="dialog" aria-modal="true" aria-hidden="true"
     aria-labelledby="modal-donate-title">
@@ -77,8 +82,22 @@
                     stroke-width="2.4048" stroke-linecap="round" stroke-linejoin="round" />
             </svg></button>
         <div class="modal__body">
-            <img src="images/qr.jpg"
-                style="max-width: 220px; display: flex; justify-self: center; border-radius: 10px;">
+            @if ($qr_id)
+                <div class="modal__qr">
+                    {!! wp_get_attachment_image($qr_id, 'large', false, [
+                        'class' => 'modal__qr-image',
+                        'loading' => 'lazy',
+                        'decoding' => 'async',
+                    ]) !!}
+                    @if ($qr_caption)
+                        <div class="modal__qr-caption">{{ $qr_caption }}</div>
+                    @endif
+                    @php $qr_full = wp_get_attachment_image_src($qr_id, 'full'); @endphp
+
+                </div>
+            @else
+                <p>QR-код пока не загружен.</p>
+            @endif
         </div>
 
     </div>
@@ -273,175 +292,8 @@
     </div>
 </div>
 
-<div class="modal" id="modal-feedback-lia" role="dialog" aria-modal="true" aria-hidden="true"
-    aria-labelledby="modal-feedback-lia-title">
-    <div class="modal__backdrop" data-modal-close></div>
-    <div class="modal__dialog" role="document">
-        <button class="modal__close" aria-label="Закрыть" data-modal-close>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                xmlns="http://www.w3.org/2000/svg">
-                <path d="M19.2003 4.80005L4.80029 19.2M4.80029 4.80005L19.2003 19.2" style="stroke: var(--black);"
-                    stroke-width="2.4048" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-        </button>
-        <div class="modal__user">
-            <div class="image">
-                <img src="./images/lia.png">
-            </div>
-            <div class="info">
-                <span class="name">Лия</span>
-            </div>
-        </div>
-        <div class="modal__body">
-            <p>Всем привет. Меня зовут Лия. Осенью прошлого года мне диагностировали рак левой молочной железы,
-                гормональный, агрессивный 2 стадия. Мне сделали резекцию , провели несколько сеансов химиотерапии, и
-                впереди меня ждет лучевая и гормонотерапия. Не буду описывать все эти долгие процессы ) Я пишу здесь для
-                того , чтоб сказать огромное спасибо этим удивительным людям , которые помогают мне преодолевать
-                трудности с которыми я сталкиваюсь во время терапии. Моя благодарность Климу , президенту фонда *Решение
-                жить*и всем тем кто участвует в моем процессе выздоровления. Гормонотерапия качественными препаратами
-                штука недешевая . Спасибо вам, ребята, за то что я смогу жить полноценно и чувствовать себя хорошо. </p>
-
-        </div>
-    </div>
-</div>
-
-<div class="modal" id="modal-feedback-darya" role="dialog" aria-modal="true" aria-hidden="true"
-    aria-labelledby="modal-feedback-darya-title">
-    <div class="modal__backdrop" data-modal-close></div>
-    <div class="modal__dialog" role="document">
-        <button class="modal__close" aria-label="Закрыть" data-modal-close>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                xmlns="http://www.w3.org/2000/svg">
-                <path d="M19.2003 4.80005L4.80029 19.2M4.80029 4.80005L19.2003 19.2" style="stroke: var(--black);"
-                    stroke-width="2.4048" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-        </button>
-        <div class="modal__user">
-            <div class="image">
-                <img src="./images/feedback/darya.jpg">
-            </div>
-            <div class="info">
-                <span class="name">Дарья</span>
-            </div>
-        </div>
-        <div class="modal__body">
-            <p>Всех приветствую! Я Дарья.
-
-                Хочу выразить благодарность Климентию и участникам группы.
-
-                Рада оказаться в обществе доброжелательных, участливых и сильных духом людей!
-
-            </p>
-
-        </div>
-    </div>
-</div>
-
-<div class="modal" id="modal-feedback-alena" role="dialog" aria-modal="true" aria-hidden="true"
-    aria-labelledby="modal-feedback-alena-title">
-    <div class="modal__backdrop" data-modal-close></div>
-    <div class="modal__dialog" role="document">
-        <button class="modal__close" aria-label="Закрыть" data-modal-close>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                xmlns="http://www.w3.org/2000/svg">
-                <path d="M19.2003 4.80005L4.80029 19.2M4.80029 4.80005L19.2003 19.2" style="stroke: var(--black);"
-                    stroke-width="2.4048" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-        </button>
-        <div class="modal__user">
-            <div class="image">
-                <img src="./images/feedback/a.png">
-            </div>
-            <div class="info">
-                <span class="name">Алена</span>
-            </div>
-        </div>
-        <div class="modal__body">
-            <p>Всем привет,меня зовут Алёна.
-            <p>
-
-            <p>В 2021 году,у меня диагностировали рак молочной железы. Как же тогда мне хватало такой группы,где тебя
-                поддерживают,делятся своим опытом,как справляются со своими страхами.</p>
-            <p>
-                Сейчас я с такой радостью хожу на группы,очень грустно становится когда по некоторым обстоятельствам не
-                успеваю придти. Это то место,где можно отдохнуть душой,где все заботы,страхи куда-то исчезают. Я очень
-                Благодарна Высшей силе,что привела меня на эту группу,Благодарна Климу за то,что создал эту группу.
-                Хочется говорить всем,кто столкнулся с этой проблемой, чтобы шли туда,и понимали,что мы не одни.
-                Благодарю за группу,за поддержку 🙏❤️
 
 
-            </p>
-
-        </div>
-    </div>
-</div>
-
-<div class="modal" id="modal-feedback-robert" role="dialog" aria-modal="true" aria-hidden="true"
-    aria-labelledby="modal-feedback-robert-title">
-    <div class="modal__backdrop" data-modal-close></div>
-    <div class="modal__dialog" role="document">
-        <button class="modal__close" aria-label="Закрыть" data-modal-close>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                xmlns="http://www.w3.org/2000/svg">
-                <path d="M19.2003 4.80005L4.80029 19.2M4.80029 4.80005L19.2003 19.2" style="stroke: var(--black);"
-                    stroke-width="2.4048" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-        </button>
-        <div class="modal__user">
-            <div class="image">
-                <img src="./images/feedback/robert.jpg">
-            </div>
-            <div class="info">
-                <span class="name">Роберт</span>
-            </div>
-        </div>
-        <div class="modal__body">
-            <p>Здравствуйте, меня зовут Роберт! Благодарю организаторов и высшую силу за проведение групп взаимопомощи,
-                очень вдохновляет,и поддерживает!!!
-
-
-
-            </p>
-
-        </div>
-    </div>
-</div>
-
-<div class="modal" id="modal-feedback-nataliya" role="dialog" aria-modal="true" aria-hidden="true"
-    aria-labelledby="modal-feedback-nataliya-title">
-    <div class="modal__backdrop" data-modal-close></div>
-    <div class="modal__dialog" role="document">
-        <button class="modal__close" aria-label="Закрыть" data-modal-close>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                xmlns="http://www.w3.org/2000/svg">
-                <path d="M19.2003 4.80005L4.80029 19.2M4.80029 4.80005L19.2003 19.2" style="stroke: var(--black);"
-                    stroke-width="2.4048" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-        </button>
-        <div class="modal__user">
-            <div class="image">
-                <img src="./images/feedback/nataliya.jpg">
-            </div>
-            <div class="info">
-                <span class="name">Наталия</span>
-            </div>
-        </div>
-        <div class="modal__body">
-            <p>Здравствуйте, я Наталия.</p>
-
-            <p> Благодарю Клима и всех членов группы за еженедельные взаимоподдерживающие встречи. </p>
-
-            <p>С верой в дальнейшее развитие нашего исцеляющего движения!
-
-
-
-
-
-            </p>
-
-        </div>
-    </div>
-</div>
 
 <div class="modal" id="modal-feedback-item" role="dialog" aria-modal="true" aria-hidden="true"
     aria-labelledby="modal-feedback-item-title">

@@ -131,3 +131,21 @@
   window.addEventListener('load', setQuoteCardPosition);
   window.addEventListener('resize', setQuoteCardPosition);
 })();
+
+document.addEventListener('DOMContentLoaded', () => {
+  if (!document.body.classList.contains('blog')) return;
+
+  const wrapper = document.querySelector('.wrapper');
+  const footer = document.querySelector('.footer');
+
+  if (wrapper && footer) {
+    const divFlex = document.createElement('div');
+    divFlex.classList.add('div-flex');
+
+    const parent = wrapper.parentNode;
+    parent.insertBefore(divFlex, wrapper);
+
+    divFlex.appendChild(wrapper);
+    divFlex.appendChild(footer);
+  }
+});

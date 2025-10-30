@@ -2,6 +2,21 @@
   background: var(--about-page-bg);
 }
 
+.div-flex {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 100px); // высота экрана минус высота хедер
+  gap: 24px;
+
+  .wrapper {
+    flex: 1; // занимает всё доступное пространство
+  }
+
+  .footer {
+    margin-top: auto; // прижимает футер вниз
+  }
+}
+
 .events {
   .page-title {
     margin-top: 40px;
@@ -39,7 +54,7 @@
       font-size: 17px;
       line-height: 150%;
       color: var(--black);
-      font-weight: 600;
+      font-weight: 500;
 
       @media screen and (max-width: 520px) {
         font-size: 15px;
@@ -63,7 +78,7 @@
         color: #fff;
         font-size: 15px;
         line-height: 150%;
-        font-weight: 500;
+        font-weight: 400;
         align-items: center;
       }
 
@@ -76,7 +91,7 @@
         color: #fff;
         font-size: 15px;
         line-height: 150%;
-        font-weight: 500;
+        font-weight: 400;
         align-items: center;
       }
     }

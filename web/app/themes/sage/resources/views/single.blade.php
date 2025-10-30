@@ -15,7 +15,10 @@
         : '';
 
     // Дата и "сколько назад"
-    $date_human = get_the_date('d.m.Y');
+    use Carbon\Carbon;
+    Carbon::setLocale('ru');
+    setlocale(LC_TIME, 'ru_RU.UTF-8');
+    $date_human = Carbon::parse($post->post_date)->formatLocalized('%e %B %Y');
     $ago = human_time_diff(get_the_time('U'), current_time('timestamp')) . ' назад';
 @endphp
 

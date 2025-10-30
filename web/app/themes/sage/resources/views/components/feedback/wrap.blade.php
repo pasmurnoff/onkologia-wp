@@ -137,7 +137,8 @@
                     </div>
                 </div>
                 <div class="feedback__action_create">
-                    <a data-modal-open="feedback" class="btn_secondary">Написать отзыв</a>
+                    <a href="https://forum.onkologia.ru/t/otzyvy-o-deyatelnosti-fonda-reshenie-zhit/90"
+                        class="btn_secondary">Написать отзыв</a>
                 </div>
             </div>
         </div>

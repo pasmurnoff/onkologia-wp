@@ -3,7 +3,7 @@
            Следите за анонсами мероприятий <br> в сообществе VK и Telegram-канале
        </div>
        <div class="follow-us__buttons">
-           <a href="https://vk.com/onkologia_ru" target="_blank" rel="noopener"
+           <a href="https://vk.com/resheniezhitkzn" target="_blank" rel="noopener"
                class="follow-us__button follow-us__button_vk">
                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                    <path
@@ -13,7 +13,7 @@
 
                Вконтакте
            </a>
-           <a href="https://t.me/onkologia_ru" target="_blank" rel="noopener"
+           <a href="https://t.me/onkologia_forum" target="_blank" rel="noopener"
                class="follow-us__button follow-us__button_telegram">
 
                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

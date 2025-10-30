@@ -44,6 +44,7 @@
                         <li><a href="https://forum.onkologia.ru/">Форум</a></li>
                         <li><a href="/fond">Фонд</a></li>
                         <li><a href="/o-nas">О нас</a></li>
+                        <li><a href="/sobytiya">События</a></li>
                         <li><a href="#" class="theme-toggle-mobile">
 
                                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none"

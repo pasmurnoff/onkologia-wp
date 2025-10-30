@@ -21,7 +21,7 @@
             ]);
         @endphp
 
-        <h1 class="page-title">{{ $page_title }}</h1>
+        <h1 class="page-title">{{ $page_title }} фонда</h1>
 
         @includeIf('components.follow-us-events.wrap')
 
@@ -67,7 +67,9 @@
                             @endphp
 
                             <div class="events-cards__text">
-                                <p>{!! $excerpt !!}</p>
+                                <a href="{{ get_permalink() }}">
+                                    <p>{!! $excerpt !!}</p>
+                                </a>
                             </div>
 
                             <div class="events-cards__bottom">
