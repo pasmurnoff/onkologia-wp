@@ -4,8 +4,10 @@ import 'jquery';
 // Import components
 import './components/header/init'
 import './components/base/init'
+import './components/slider/init'
 import './components/modals/init'
 import './components/modals/feedback-modal'
+import './components/media-slider/init'
 import './components/partners-slider/init'
 
 // import local dependencies

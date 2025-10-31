@@ -4,17 +4,14 @@
 @section('content')
     <section class="events container_rg">
         @php
-            // Заголовок страницы записей
             $posts_page_id = get_option('page_for_posts');
             $page_title = $posts_page_id ? get_the_title($posts_page_id) : 'События';
 
-            // Подготовка пагинации
             $paged = get_query_var('paged') ? (int) get_query_var('paged') : 1;
 
-            // Получаем только записи из рубрики "sobytiya"
             $events_query = new WP_Query([
                 'post_type' => 'post',
-                'category_name' => 'sobytiya', // ← ключ рубрики (slug)
+                'category_name' => 'sobytiya',
                 'posts_per_page' => 9,
                 'paged' => $paged,
                 'ignore_sticky_posts' => true,
@@ -31,20 +28,25 @@
                     @php $events_query->the_post(); @endphp
 
                     @php
-                        $thumb = has_post_thumbnail()
-                            ? get_the_post_thumbnail(null, 'medium_large', ['class' => 'events-cards__image'])
-                            : '<img class="events-cards__image" src="' .
-                                esc_url(get_theme_file_uri('resources/assets/images/placeholder.png')) .
-                                '" alt="' .
-                                esc_attr(get_the_title()) .
-                                '">';
+                        // --- КОРРЕКТНЫЙ ПОЛУЧАТЕЛЬ ОБЛОЖКИ ---
+                        if (function_exists('mytheme_get_cover_image_html')) {
+                            $thumb_html = mytheme_get_cover_image_html(get_the_ID(), 'medium_large', [
+                                'class' => 'events-cards__image',
+                            ]);
+                        } else {
+                            // Фоллбек, если хелпера ещё нет: обычная миниатюра или ничего
+                            $thumb_html = has_post_thumbnail()
+                                ? get_the_post_thumbnail(null, 'medium_large', ['class' => 'events-cards__image'])
+                                : '';
+                        }
+
                         $date_human = get_the_date('j F Y');
                         $ago = human_time_diff(get_the_time('U'), current_time('timestamp')) . ' назад';
                     @endphp
 
                     <article @php post_class('events-cards__element') @endphp>
                         <a href="{{ get_permalink() }}" aria-label="{{ esc_attr(get_the_title()) }}">
-                            {!! $thumb !!}
+                            {!! $thumb_html !!}
                         </a>
 
                         <div class="events-cards__content">
@@ -60,7 +62,7 @@
                                     $excerpt = wp_strip_all_tags($excerpt);
                                 }
 
-                                $limit = 120; // сколько символов оставить
+                                $limit = 120;
                                 if (mb_strlen($excerpt, 'UTF-8') > $limit) {
                                     $excerpt = mb_substr($excerpt, 0, $limit, 'UTF-8') . '…';
                                 }
@@ -80,7 +82,6 @@
                     </article>
                 @endwhile
             </div>
-
 
             @php wp_reset_postdata(); @endphp
         @else

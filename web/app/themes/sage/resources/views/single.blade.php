@@ -9,17 +9,47 @@
         $back_url = $posts_page_id ? get_permalink($posts_page_id) : home_url('/');
     }
 
-    // Картинка
-    $thumb_html = has_post_thumbnail()
-        ? get_the_post_thumbnail(null, 'large', ['class' => 'detail-page__image-el'])
-        : '';
+    // --- Локализованная дата и "сколько назад" (WordPress-способ) ---
+    $date_human = get_the_date('j F Y', $post);
+    $ago = human_time_diff(get_the_time('U', $post), current_time('timestamp')) . ' назад';
 
-    // Дата и "сколько назад"
-    use Carbon\Carbon;
-    Carbon::setLocale('ru');
-    setlocale(LC_TIME, 'ru_RU.UTF-8');
-    $date_human = Carbon::parse($post->post_date)->formatLocalized('%e %B %Y');
-    $ago = human_time_diff(get_the_time('U'), current_time('timestamp')) . ' назад';
+    // --- ACF данные ---
+    $vk_url = function_exists('get_field') ? (string) get_field('vk_video_url', $post->ID) : '';
+    $gallery = function_exists('get_field') ? (array) (get_field('gallery', $post->ID) ?: []) : [];
+
+    // --- Генерация HTML для слайдов ---
+    $slides = [];
+
+    // Слайд с видео VK — если есть
+    if ($vk_url) {
+        // сначала oEmbed
+        $vk_embed = wp_oembed_get($vk_url);
+
+        // если oEmbed не сработал — жёстко делаем правильный embed
+        if (!$vk_embed && function_exists('mytheme_vk_video_embed_iframe')) {
+            $vk_embed = mytheme_vk_video_embed_iframe($vk_url);
+        }
+
+        if ($vk_embed) {
+            $slides[] = [
+                'type' => 'video',
+                'html' => $vk_embed,
+            ];
+        }
+    }
+
+    // Слайды с изображениями из галереи
+    foreach ($gallery as $img) {
+        // $img — массив ACF изображения
+        $url = isset($img['sizes']['large']) ? $img['sizes']['large'] : $img['url'];
+        $alt = isset($img['alt']) ? $img['alt'] : (get_the_title($post) ?: '');
+        $slides[] = [
+            'type' => 'image',
+            'html' => sprintf('<img src="%s" alt="%s" loading="lazy" />', esc_url($url), esc_attr($alt)),
+        ];
+    }
+
+    $has_slider = !empty($slides);
 @endphp
 
 @section('content')
@@ -35,12 +65,37 @@
         </a>
 
         <div class="detail-page">
+            @if ($has_slider)
+                <div class="detail-page__image media-slider" data-autoplay="0" data-interval="8000">
+                    <div class="media-slider__viewport">
+                        <div class="media-slider__track">
+                            @foreach ($slides as $i => $slide)
+                                <div class="media-slider__slide" data-index="{{ $i }}">
+                                    @if ($slide['type'] === 'video')
+                                        <div class="media-slider__video">
+                                            {!! $slide['html'] !!}
+                                        </div>
+                                    @else
+                                        <div class="media-slider__image">
+                                            {!! $slide['html'] !!}
+                                        </div>
+                                    @endif
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
 
-            @if ($thumb_html)
-                <div class="detail-page__image">
-                    <a>
-                        {!! $thumb_html !!}
-                    </a>
+                    <button class="media-slider__nav media-slider__nav--prev" type="button" aria-label="Назад">‹</button>
+                    <button class="media-slider__nav media-slider__nav--next" type="button" aria-label="Вперёд">›</button>
+
+                    @if (count($slides) > 1)
+                        <div class="media-slider__dots">
+                            @foreach ($slides as $i => $_)
+                                <button class="media-slider__dot" type="button" aria-label="Слайд {{ $i + 1 }}"
+                                    data-to="{{ $i }}"></button>
+                            @endforeach
+                        </div>
+                    @endif
                 </div>
             @endif
 
@@ -60,7 +115,6 @@
                         <div class="detail-page__date">{{ $ago }}</div>
                     </div>
                 </div>
-
             </div>
         </div>
     </section>
