@@ -37,15 +37,31 @@
             ];
         }
     }
-
     // Слайды с изображениями из галереи
     foreach ($gallery as $img) {
         // $img — массив ACF изображения
-        $url = isset($img['sizes']['large']) ? $img['sizes']['large'] : $img['url'];
+        $full = isset($img['url']) ? $img['url'] : ''; // оригинал
+        $url = isset($img['sizes']['large']) ? $img['sizes']['large'] : $full; // превью в слайдер
         $alt = isset($img['alt']) ? $img['alt'] : (get_the_title($post) ?: '');
+
+        // размеры для data-lg-size (если есть)
+        $w = isset($img['width']) ? (int) $img['width'] : 0;
+        $h = isset($img['height']) ? (int) $img['height'] : 0;
+        $lg_size = $w && $h ? $w . '-' . $h : '';
+
         $slides[] = [
             'type' => 'image',
-            'html' => sprintf('<img src="%s" alt="%s" loading="lazy" />', esc_url($url), esc_attr($alt)),
+            'html' => sprintf(
+                // a[data-lg="1"] — селектор для lightGallery
+                '<a class="media-slider__image-link" href="%s" data-lg="1"%s data-sub-html="%s">
+                <img src="%s" alt="%s" loading="lazy" />
+             </a>',
+                esc_url($full),
+                $lg_size ? ' data-lg-size="' . esc_attr($lg_size) . '"' : '',
+                esc_attr($alt), // подпись
+                esc_url($url),
+                esc_attr($alt),
+            ),
         ];
     }
 
@@ -118,4 +134,31 @@
             </div>
         </div>
     </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 1) Берём трек слайдов
+            var track = document.querySelector('.media-slider .media-slider__track');
+            if (!track || typeof window.lightGallery !== 'function') return;
+
+            // 2) Запускаем lightGallery, говорим: "ищи <a data-lg='1'> внутри track"
+            window.lgInstance = window.lightGallery(track, {
+                selector: 'a[data-lg="1"]',
+                plugins: [lgZoom, lgThumbnail],
+                download: false, // убрать кнопку "скачать"
+                speed: 300,
+                zoom: true,
+                thumbnail: true,
+                appendSubHtmlTo: '.lg-item', // подпись из data-sub-html
+                showCloseIcon: true, // ✅ показывает крестик
+                mobileSettings: {
+                    controls: true,
+                    showCloseIcon: true,
+                    showCloseIcon: true, // ✅ и на мобилках тоже
+                    download: false
+                }
+            });
+        });
+    </script>
+
 @endsection

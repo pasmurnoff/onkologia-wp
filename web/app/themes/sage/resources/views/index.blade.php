@@ -28,49 +28,55 @@
                     @php $events_query->the_post(); @endphp
 
                     @php
-                        // --- КОРРЕКТНЫЙ ПОЛУЧАТЕЛЬ ОБЛОЖКИ ---
+                        // Обложка
                         if (function_exists('mytheme_get_cover_image_html')) {
                             $thumb_html = mytheme_get_cover_image_html(get_the_ID(), 'medium_large', [
                                 'class' => 'events-cards__image',
                             ]);
                         } else {
-                            // Фоллбек, если хелпера ещё нет: обычная миниатюра или ничего
                             $thumb_html = has_post_thumbnail()
                                 ? get_the_post_thumbnail(null, 'medium_large', ['class' => 'events-cards__image'])
                                 : '';
                         }
 
+                        // Дата
                         $date_human = get_the_date('j F Y');
                         $ago = human_time_diff(get_the_time('U'), current_time('timestamp')) . ' назад';
+
+                        // ---- ТЕКСТЫ БЕЗ ДВОЙНОГО ЭКРАНИРОВАНИЯ ----
+                        // Заголовок
+                        $title_raw = get_the_title();
+                        $title = wp_specialchars_decode($title_raw, ENT_QUOTES);
+
+                        // Анонс
+                        $excerpt_raw = get_the_excerpt();
+                        if (!$excerpt_raw) {
+                            $excerpt_raw = get_the_content();
+                        }
+                        // Сначала декодируем сущности, затем вычищаем HTML
+                        $excerpt_clean = wp_strip_all_tags(wp_specialchars_decode($excerpt_raw, ENT_QUOTES));
+                        $excerpt_clean = trim(preg_replace('/\s+/', ' ', $excerpt_clean));
+
+                        // Ограничение длины
+                        $limit = 120;
+                        if (mb_strlen($excerpt_clean, 'UTF-8') > $limit) {
+                            $excerpt_clean = mb_substr($excerpt_clean, 0, $limit, 'UTF-8') . '…';
+                        }
                     @endphp
 
                     <article @php post_class('events-cards__element') @endphp>
-                        <a href="{{ get_permalink() }}" aria-label="{{ esc_attr(get_the_title()) }}">
+                        <a href="{{ get_permalink() }}" aria-label="{{ esc_attr($title) }}">
                             {!! $thumb_html !!}
                         </a>
 
                         <div class="events-cards__content">
                             <div class="events-cards__title">
-                                <a href="{{ get_permalink() }}">{{ get_the_title() }}</a>
+                                <a href="{{ get_permalink() }}">{{ $title }}</a>
                             </div>
-
-                            @php
-                                $excerpt = get_the_excerpt();
-                                if (!$excerpt) {
-                                    $excerpt = wp_strip_all_tags(get_the_content());
-                                } else {
-                                    $excerpt = wp_strip_all_tags($excerpt);
-                                }
-
-                                $limit = 120;
-                                if (mb_strlen($excerpt, 'UTF-8') > $limit) {
-                                    $excerpt = mb_substr($excerpt, 0, $limit, 'UTF-8') . '…';
-                                }
-                            @endphp
 
                             <div class="events-cards__text">
                                 <a href="{{ get_permalink() }}">
-                                    <p>{!! $excerpt !!}</p>
+                                    <p>{{ $excerpt_clean }}</p>
                                 </a>
                             </div>
 

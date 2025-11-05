@@ -10,6 +10,13 @@
     const autoplay = Number(root.dataset.autoplay) === 1;
     const interval = Number(root.dataset.interval) || 8000;
 
+      // ✅ если только одно изображение — скрываем кнопки и точки
+  if (slides.length <= 1) {
+    if (prev) prev.style.display = 'none';
+    if (next) next.style.display = 'none';
+    if (dotsWrap) dotsWrap.style.display = 'none';
+  }
+
     let index = 0;
     let timer = null;
 

@@ -101,7 +101,7 @@
 
 .events-cards {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
   margin-top: 12px;
 
@@ -152,16 +152,27 @@
     line-height: 150%;
     color: var(--black);
     margin-bottom: 8px;
+    white-space: nowrap; /* одна строка */
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   &__text {
     margin-bottom: 16px;
 
     p {
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      height: calc(1.5em * 3);
       font-size: 15px;
       line-height: 150%;
       font-weight: 400;
       color: var(--silver-grey);
+
+      @media (max-width: 520px) {
+        max-height: calc(1.5em * 2);
+      }
     }
   }
 
