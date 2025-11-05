@@ -1,0 +1,45 @@
+.page-politics {
+  h1 {
+    color: var(--black);
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    margin-top: 60px;
+
+    @media (max-width: 1024px) {
+      margin-top: 48px;
+    }
+  }
+
+  h2 {
+    color: var(--black);
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    margin-top: 60px;
+
+    @media (max-width: 1024px) {
+      margin-top: 48px;
+    }
+  }
+
+  h3 {
+    color: var(--black);
+    font-size: 15px;
+    font-weight: 500;
+    padding-top: 16px;
+  }
+
+  p {
+    padding-top: 16px;
+    margin-bottom: 16px;
+    line-height: 150%;
+    font-size: 15px;
+    color: var(--silver-grey);
+    font-weight: 400;
+  }
+
+  a {
+    color: var(--black);
+  }
+}

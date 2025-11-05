@@ -50,6 +50,21 @@ body {
       padding: 0 16px;
     }
   }
+
+  &_pol {
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    max-width: 1040px;
+
+    @media screen and (max-width: 1024px) {
+      padding: 0 24px;
+    }
+
+    @media screen and (max-width: 520px) {
+      padding: 0 16px;
+    }
+  }
 }
 
 .btn {
