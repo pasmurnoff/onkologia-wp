@@ -28,7 +28,7 @@
                     @php $events_query->the_post(); @endphp
 
                     @php
-                        // Обложка
+                        // --- Обложка ---
                         if (function_exists('mytheme_get_cover_image_html')) {
                             $thumb_html = mytheme_get_cover_image_html(get_the_ID(), 'medium_large', [
                                 'class' => 'events-cards__image',
@@ -39,25 +39,28 @@
                                 : '';
                         }
 
-                        // Дата
+                        // --- Дата ---
                         $date_human = get_the_date('j F Y');
                         $ago = human_time_diff(get_the_time('U'), current_time('timestamp')) . ' назад';
 
-                        // ---- ТЕКСТЫ БЕЗ ДВОЙНОГО ЭКРАНИРОВАНИЯ ----
+                        // --- ТЕКСТЫ БЕЗ ДВОЙНОГО ЭКРАНИРОВАНИЯ ---
+
                         // Заголовок
                         $title_raw = get_the_title();
-                        $title = wp_specialchars_decode($title_raw, ENT_QUOTES);
+                        $title = html_entity_decode($title_raw, ENT_QUOTES | ENT_HTML5, 'UTF-8');
 
                         // Анонс
                         $excerpt_raw = get_the_excerpt();
                         if (!$excerpt_raw) {
                             $excerpt_raw = get_the_content();
                         }
-                        // Сначала декодируем сущности, затем вычищаем HTML
-                        $excerpt_clean = wp_strip_all_tags(wp_specialchars_decode($excerpt_raw, ENT_QUOTES));
+
+                        // декодируем HTML-сущности, чистим HTML и пробелы
+                        $excerpt_decoded = html_entity_decode($excerpt_raw, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                        $excerpt_clean = wp_strip_all_tags($excerpt_decoded);
                         $excerpt_clean = trim(preg_replace('/\s+/', ' ', $excerpt_clean));
 
-                        // Ограничение длины
+                        // ограничение длины
                         $limit = 120;
                         if (mb_strlen($excerpt_clean, 'UTF-8') > $limit) {
                             $excerpt_clean = mb_substr($excerpt_clean, 0, $limit, 'UTF-8') . '…';
