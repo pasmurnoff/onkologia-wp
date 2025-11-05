@@ -13,13 +13,13 @@
     $date_human = get_the_date('j F Y');
     $ago = human_time_diff(get_the_time('U'), current_time('timestamp')) . ' назад';
 
-    // --- Заголовок без HTML-сущностей (надёжно) ---
+    // --- Заголовок: берём СЫРОЙ из БД (без фильтров), затем декодируем сущности ---
     $post_id = get_queried_object_id() ?: get_the_ID();
-    $title_raw = get_the_title($post_id);
-    if (!$title_raw) {
-        $title_raw = get_the_title();
-    }
-    $title_decoded = wp_kses_decode_entities($title_raw);
+    $title_raw_db = (string) get_post_field('post_title', $post_id, 'raw'); // без фильтров
+    $title_decoded = html_entity_decode($title_raw_db, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+    // Не трогаем кавычки: если в БД заголовок == "", так и показываем две кавычки.
+    // (Если хочешь фолбэк: if ($title_decoded === '') $title_decoded = 'Без названия';)
 
     // --- ACF данные ---
     $vk_url = function_exists('get_field') ? (string) get_field('vk_video_url', $post_id) : '';
@@ -34,7 +34,6 @@
         if (!$vk_embed && function_exists('mytheme_vk_video_embed_iframe')) {
             $vk_embed = mytheme_vk_video_embed_iframe($vk_url);
         }
-
         if ($vk_embed) {
             $slides[] = [
                 'type' => 'video',
@@ -119,7 +118,7 @@
             @endif
 
             <div class="detail-page__content">
-                {{-- исправленный заголовок --}}
+                {{-- Заголовок из БД (raw) с декодированными сущностями. Поддерживает "" --}}
                 <h1>{{ $title_decoded }}</h1>
 
                 {{-- Основной контент записи --}}
