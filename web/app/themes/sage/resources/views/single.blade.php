@@ -2,35 +2,35 @@
 @extends('layouts.app')
 
 @php
-    // URL "назад": сперва реферер, если нет — страница записей, если нет — главная
+    // --- URL "назад" ---
     $back_url = wp_get_referer();
     if (!$back_url) {
         $posts_page_id = (int) get_option('page_for_posts');
         $back_url = $posts_page_id ? get_permalink($posts_page_id) : home_url('/');
     }
 
-    // --- Локализованная дата и "сколько назад" (WordPress-способ) ---
-    $date_human = get_the_date('j F Y', $post);
-    $ago = human_time_diff(get_the_time('U', $post), current_time('timestamp')) . ' назад';
+    // --- Дата и "сколько назад" ---
+    $date_human = get_the_date('j F Y');
+    $ago = human_time_diff(get_the_time('U'), current_time('timestamp')) . ' назад';
 
-    // --- Заголовок без HTML-сущностей ---
-    $title_raw = get_the_title($post);
-    // можно и html_entity_decode(...), но wp_kses_decode_entities — вордпрессовский способ
+    // --- Заголовок без HTML-сущностей (надёжно) ---
+    $post_id = get_queried_object_id() ?: get_the_ID();
+    $title_raw = get_the_title($post_id);
+    if (!$title_raw) {
+        $title_raw = get_the_title();
+    }
     $title_decoded = wp_kses_decode_entities($title_raw);
 
     // --- ACF данные ---
-    $vk_url = function_exists('get_field') ? (string) get_field('vk_video_url', $post->ID) : '';
-    $gallery = function_exists('get_field') ? (array) (get_field('gallery', $post->ID) ?: []) : [];
+    $vk_url = function_exists('get_field') ? (string) get_field('vk_video_url', $post_id) : '';
+    $gallery = function_exists('get_field') ? (array) (get_field('gallery', $post_id) ?: []) : [];
 
     // --- Генерация HTML для слайдов ---
     $slides = [];
 
     // Слайд с видео VK — если есть
     if ($vk_url) {
-        // сначала oEmbed
         $vk_embed = wp_oembed_get($vk_url);
-
-        // если oEmbed не сработал — жёсткий iframe-embed (кастомная функция темы)
         if (!$vk_embed && function_exists('mytheme_vk_video_embed_iframe')) {
             $vk_embed = mytheme_vk_video_embed_iframe($vk_url);
         }
@@ -45,12 +45,10 @@
 
     // Слайды с изображениями из галереи
     foreach ($gallery as $img) {
-        // $img — массив ACF изображения
-        $full = isset($img['url']) ? $img['url'] : ''; // оригинал (в лайтбокс)
-        $url = isset($img['sizes']['large']) ? $img['sizes']['large'] : $full; // превью в слайдер
+        $full = isset($img['url']) ? $img['url'] : '';
+        $url = isset($img['sizes']['large']) ? $img['sizes']['large'] : $full;
         $alt = isset($img['alt']) && $img['alt'] !== '' ? $img['alt'] : $title_decoded;
 
-        // размеры для data-lg-size (опционально)
         $w = isset($img['width']) ? (int) $img['width'] : 0;
         $h = isset($img['height']) ? (int) $img['height'] : 0;
         $lg_size = $w && $h ? $w . '-' . $h : '';
@@ -58,15 +56,14 @@
         $slides[] = [
             'type' => 'image',
             'html' => sprintf(
-                // a[data-lg="1"] — селектор для lightGallery
                 '<a class="media-slider__image-link" href="%s" data-lg="1"%s data-sub-html="%s">
-                   <img src="%s" alt="%s" loading="lazy">
+                    <img src="%s" alt="%s" loading="lazy">
                  </a>',
                 esc_url($full),
                 $lg_size ? ' data-lg-size="' . esc_attr($lg_size) . '"' : '',
-                esc_attr($alt), // подпись для лайтбокса
+                esc_attr($alt),
                 esc_url($url),
-                esc_attr($alt), // alt тега IMG
+                esc_attr($alt),
             ),
         ];
     }
@@ -122,6 +119,7 @@
             @endif
 
             <div class="detail-page__content">
+                {{-- исправленный заголовок --}}
                 <h1>{{ $title_decoded }}</h1>
 
                 {{-- Основной контент записи --}}
@@ -141,7 +139,7 @@
         </div>
     </section>
 
-    {{-- Инициализация lightGallery (стрелки/дотсы остаются управлением слайдера, а лайтбокс — по клику на картинку) --}}
+    {{-- Инициализация lightGallery --}}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var track = document.querySelector('.media-slider .media-slider__track');
