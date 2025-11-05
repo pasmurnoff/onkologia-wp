@@ -61,7 +61,7 @@
                         $excerpt_clean = trim(preg_replace('/\s+/', ' ', $excerpt_clean));
 
                         // ограничение длины
-                        $limit = 120;
+                        $limit = 180;
                         if (mb_strlen($excerpt_clean, 'UTF-8') > $limit) {
                             $excerpt_clean = mb_substr($excerpt_clean, 0, $limit, 'UTF-8') . '…';
                         }

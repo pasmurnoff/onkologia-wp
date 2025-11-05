@@ -162,6 +162,8 @@
 
     p {
       -webkit-box-orient: vertical;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
       overflow: hidden;
       text-overflow: ellipsis;
       height: calc(1.5em * 3);
