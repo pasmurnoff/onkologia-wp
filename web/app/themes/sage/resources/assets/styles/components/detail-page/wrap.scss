@@ -217,3 +217,17 @@
     }
   }
 }
+
+.single-post {
+  .footer {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+
+    @media (max-width: 768px) {
+      position: relative;
+      width: auto;
+      bottom: 0;
+    }
+  }
+}
