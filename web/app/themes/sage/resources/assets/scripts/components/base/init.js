@@ -133,7 +133,9 @@
 })();
 
 document.addEventListener('DOMContentLoaded', () => {
-  if (!document.body.classList.contains('blog')) return;
+  const body = document.body;
+
+  if (!body.classList.contains('blog') && !body.classList.contains('single-post')) return;
 
   const wrapper = document.querySelector('.wrapper');
   const footer = document.querySelector('.footer');
