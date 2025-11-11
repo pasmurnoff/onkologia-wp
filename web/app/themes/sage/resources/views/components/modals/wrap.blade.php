@@ -55,7 +55,8 @@
                 <textarea class="form_textarea" name="message" placeholder="" rows="5" required></textarea>
                 <div class="form-checkbox">
                     <input type="checkbox" required>
-                    <label>Я согласен на обработку моих персональных данных. С <a href="">Политикой обработки
+                    <label>Я согласен на обработку моих персональных данных. С <a
+                            href="https://onkologia.ru/politika-konfidencialnosti/">Политикой обработки
                             персональных данных</a>
                         ознакомлен.</label>
                 </div>
