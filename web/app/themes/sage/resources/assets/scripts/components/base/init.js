@@ -112,7 +112,7 @@
   });
 
   function setQuoteCardPosition() {
-    if (window.innerWidth > 380) return;
+    if (window.innerWidth > 520) return;
     document.querySelectorAll('.team__element').forEach((el) => {
       const rect = el.getBoundingClientRect();
       const windowCenter = window.innerWidth / 2;
